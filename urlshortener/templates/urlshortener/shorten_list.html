@@ -1,0 +1,62 @@
+{% extends 'urlshortener/base.html' %}
+
+{% load i18n %}
+
+{% block body %}
+<div class="container">
+  <div class="mx-auto text-center mt-5">
+    <h2 class="text-success">{% trans "Shortened URLs List" %}</h2>
+    <p>{% trans "Below are all the shortened URLs and their corresponding original URLs." %}</p>
+
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered mt-4">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">{% trans "Original URL" %}</th>
+            <th scope="col">{% trans "Shortened URL" %}</th>
+            <th scope="col">{% trans "Times Followed" %}</th>
+            <th scope="col">{% trans "Date Created" %}</th>
+            <th scope="col">{% trans "Copy" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for url in shortened_urls %}
+            <tr>
+              <td><a href="{{ url.long_url }}" target="_blank" class="text-primary">{{ url.long_url }}</a></td>
+              <td>
+                <input type="text" id="short-url-{{ forloop.counter }}" class="form-control" value="{{ url.short_url }}" readonly>
+              </td>
+              <td>{{ url.times_followed }}</td>
+              <td>{{ url.created }}</td>
+              <td>
+                <button class="btn btn-outline-primary" onclick="copyToClipboard({{ forloop.counter }})">
+                  <i class="fas fa-copy"></i> {% trans "Copy" %}
+                </button>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" class="text-center">{% trans "No shortened URLs available." %}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Get the current domain dynamically
+  const currentDomain = window.location.origin;
+
+  // Function to copy the shortened URL to the clipboard
+  function copyToClipboard(counter) {
+    const copyText = document.getElementById("short-url-" + counter);
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+    navigator.clipboard.writeText(currentDomain + '/' + copyText.value);
+    alert("{% trans 'Copied the shortened URL to the clipboard.' %}");
+  }
+</script>
+
+{% endblock body %}

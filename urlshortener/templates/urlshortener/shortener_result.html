@@ -1,0 +1,16 @@
+{% extends 'urlshortener/base.html' %}
+
+{% load i18n %}
+
+{% block body %}
+
+<div class="container">
+  <div class="mx-auto text-center mt-5">
+    <h2 class="text-success">{% trans "Your shortened URL" %}</h2>
+    <p>{% trans "You can copy the link below and share it with your friends" %}</p>
+    <p class="text-primary"><strong>{{ new_url }}</strong></p>
+    <p><span class="text-danger">{% trans "Original URL:" %}</span> {{ long_url }}</p>
+  </div>
+</div>
+
+{% endblock body %}
